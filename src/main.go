@@ -80,6 +80,12 @@ func stringToInteger(a string, b string) (int, int, bool) {
 	} else if strings.ContainsAny(a, "1234567890") && strings.ContainsAny(b, "1234567890") {
 		x, _ = strconv.Atoi(a)
 		y, _ = strconv.Atoi(b)
+	} else if strings.ContainsAny(a, "1234567890") && strings.ContainsAny(b, "IVX") {
+		x, _ = strconv.Atoi(a)
+		y = rimToArab(b)
+	} else if strings.ContainsAny(a, "IVX") && strings.ContainsAny(b, "1234567890") {
+		x = rimToArab(a)
+		y, _ = strconv.Atoi(b)
 	}
 	return x, y, c
 }
@@ -141,7 +147,7 @@ func main() {
 		panic("Ошибка! Введите два оператора и один операнд.")
 	}
 	argumentInteger1, argumentInteger2, isRomain := stringToInteger(argument1, argument2) // преобразовываем строковый тип аргументов в числовой
-	if isRomain == true && operand == "-" {                                               // проверяем, чтобы при вычитании в римской системе не получался отрицательный результат
+	if isRomain == true && operand == "-" && argumentInteger2 >= argumentInteger1 {       // проверяем, чтобы при вычитании в римской системе не получался отрицательный результат
 		fmt.Println("Ошибка! В римской системе нет отрицательных чисел.")
 		count += 1
 	}
@@ -173,8 +179,11 @@ func main() {
 			result = argumentInteger1 - argumentInteger2
 		}
 		if count == 0 && isRomain == true { // если счетчик ошибок = 0 и аргументы были введены в арабской системе, производим вычисление и выводим результат
-			arabToRim(result)
+			romainResult := arabToRim(result)
+			fmt.Println(romainResult)
+
+		} else {
+			fmt.Println(result)
 		}
-		fmt.Println(result)
 	}
 }
